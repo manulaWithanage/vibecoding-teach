@@ -1064,25 +1064,98 @@
            FIRST TEST: HERO SECTION WORKBENCH
            ------------------------------------------------------------- */
         .test-box {
-            border: 2px solid var(--primary);
-            border-radius: 16px;
+            border: 1px solid var(--primary-border);
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 18px 40px -12px rgba(79, 70, 229, 0.28);
             margin-top: 1.25rem;
         }
 
         .test-box-header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #9333ea 100%);
             color: white;
-            padding: 1.25rem 1.5rem;
+            padding: 1.15rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Soft light bloom in the header's top-right corner */
+        .test-box-header::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 65%);
+            pointer-events: none;
+        }
+
+        .test-box-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .live-tag::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: live-pulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes live-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            50% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
         }
 
         .test-box-header h3 {
             font-size: 1.2rem;
             font-weight: 700;
+        }
+
+        .preview-chrome {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.85rem;
+            background: #11162a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .preview-chrome-dots {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .preview-chrome-dots span {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .preview-chrome-url {
+            flex: 1;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.35);
         }
 
         /* Hero Live Preview Area */
@@ -1096,6 +1169,18 @@
             transition: all 0.3s ease;
         }
 
+        /* Faint dot grid for depth */
+        .hero-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 22px 22px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, #000 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, #000 100%);
+            pointer-events: none;
+        }
+
         /* Hairline of light along the top edge */
         .hero-preview::before {
             content: '';
@@ -1103,6 +1188,7 @@
             inset: 0 0 auto 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(165, 180, 252, 0.6), transparent);
+            z-index: 2;
         }
 
         .hero-glow {
@@ -1133,7 +1219,9 @@
         }
 
         .hero-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(165, 180, 252, 0.25);
             backdrop-filter: blur(6px);
@@ -1146,6 +1234,15 @@
             position: relative;
             z-index: 1;
             transition: all 0.3s;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
         }
 
         .hero-name {
@@ -1226,12 +1323,28 @@
         }
 
         .control-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.8rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+        }
+
+        .control-step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            border: 1px solid var(--primary-border);
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 800;
+            flex-shrink: 0;
         }
 
         .avatar-picker-row {
@@ -1276,18 +1389,29 @@
             height: 44px;
         }
 
+        .input-text:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .avatar-thumb:hover {
+            border-color: var(--primary-border);
+            transform: translateY(-1px);
+        }
+
         /* 1-Click Polish Buttons */
         .polish-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
 
         .btn-polish {
             background: var(--bg-surface-subtle);
             border: 1px solid var(--border);
-            padding: 0.6rem 0.85rem;
-            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
             font-size: 0.825rem;
             font-weight: 600;
             cursor: pointer;
@@ -1307,6 +1431,18 @@
 
         .btn-polish:active {
             transform: scale(0.97);
+        }
+
+        .btn-polish.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-polish.active:hover {
+            background: var(--primary-hover);
+            color: #ffffff;
         }
 
         /* Practical UI Polish & Reference Images Guide */

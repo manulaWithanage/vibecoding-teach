@@ -14,7 +14,7 @@ const thumb = (url) => `${url}?auto=format&fit=crop&w=100&q=80`;
 // Each preset is a complete style set, so switching between them is
 // predictable instead of layering leftovers from the previous pick.
 const PRESETS = {
-    none: {},
+    none: { toast: '↩️ Back to the default hero.' },
     glow: {
         glow: {
             background:
@@ -53,6 +53,7 @@ const PRESETS = {
 };
 
 const POLISH_BUTTONS = [
+    ['none', '↩️ Default'],
     ['glow', '🔮 Glow Aura'],
     ['glass', '🪟 Glassmorphism'],
     ['cyber', '⚡ Cyber Neon'],
@@ -122,7 +123,7 @@ export default function PracticalTest() {
     }
 
     function applyPolish(key) {
-        play('magic');
+        play(key === 'none' ? 'click' : 'magic');
         setPolish(key);
         showToast(PRESETS[key].toast);
     }
@@ -142,20 +143,19 @@ export default function PracticalTest() {
             <div className="test-box">
                 <div className="test-box-header">
                     <div>
-                        <span
-                            style={{
-                                fontSize: '0.75rem',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.05em',
-                                opacity: 0.85,
-                                fontWeight: 700,
-                            }}
-                        >
-                            Live Interactive Sandbox
-                        </span>
+                        <span className="live-tag">Live Interactive Sandbox</span>
                         <h3>Portfolio Hero Section Builder</h3>
                     </div>
                     <span style={{ fontSize: '1.5rem' }}>🧪</span>
+                </div>
+
+                <div className="preview-chrome">
+                    <div className="preview-chrome-dots">
+                        <span />
+                        <span />
+                        <span />
+                    </div>
+                    <span className="preview-chrome-url">localhost:3000 — index.html</span>
                 </div>
 
                 <div className="hero-preview" style={style.canvas}>
@@ -163,7 +163,7 @@ export default function PracticalTest() {
 
                     <img src={avatar} alt="Profile Photo" className="hero-avatar" style={style.img} />
 
-                    <div className="hero-badge" style={style.badge}>✨ Available for new projects</div>
+                    <div className="hero-badge" style={style.badge}>Available for new projects</div>
                     <h2 className="hero-name" style={style.title}>Alex Rivera</h2>
                     <p className="hero-bio">
                         Full-Stack AI Creator crafting autonomous agent workflows and clean modern web experiences.
@@ -194,7 +194,9 @@ export default function PracticalTest() {
 
                 <div className="test-controls">
                     <div>
-                        <div className="control-label">1. Choose or Enter Avatar Photo</div>
+                        <div className="control-label">
+                            <span className="control-step">1</span> Choose or enter an avatar photo
+                        </div>
                         <div className="avatar-picker-row">
                             {AVATARS.map((url, idx) => (
                                 <button
@@ -216,11 +218,16 @@ export default function PracticalTest() {
 
                     <div>
                         <div className="control-label">
-                            2. Preview Iterative Polish Styles (Try clicking to see visual transformations)
+                            <span className="control-step">2</span> Try an iterative polish style — this is what
+                            prompting a refinement looks like
                         </div>
                         <div className="polish-grid">
                             {POLISH_BUTTONS.map(([key, label]) => (
-                                <button className="btn-polish" key={key} onClick={() => applyPolish(key)}>
+                                <button
+                                    className={`btn-polish${polish === key ? ' active' : ''}`}
+                                    key={key}
+                                    onClick={() => applyPolish(key)}
+                                >
                                     {label}
                                 </button>
                             ))}
