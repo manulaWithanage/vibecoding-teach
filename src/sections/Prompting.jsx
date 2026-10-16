@@ -8,7 +8,7 @@ const STEPS = [
         title: 'Constrain',
         body: (
             <>
-                Set clear tech limits: <em>"Single-file HTML with Tailwind CSS and an avatar photo."</em>
+                Set clear tech limits: <em>"One React component with Tailwind CSS and my own photo."</em>
             </>
         ),
     },
@@ -16,9 +16,9 @@ const STEPS = [
 ];
 
 const PCE_TEMPLATE = `"Act as a Senior Frontend Developer.
-1. Outline the structure to build a clean portfolio hero section before writing code.
-2. Constraints: Single index.html file, Tailwind CSS via CDN, and a placeholder profile image.
-3. Build Step 1: the semantic HTML layout with header and call-to-action buttons."`;
+1. Plan: outline the structure of a clean portfolio hero section before writing any code.
+2. Constrain: a single Hero.jsx component in a React + Vite project, Tailwind CSS for styling, and a placeholder profile image. Function components and hooks only.
+3. Execute: build step 1 only — the JSX structure with the heading and call-to-action buttons."`;
 
 export default function Prompting() {
     const { copyText } = useApp();
