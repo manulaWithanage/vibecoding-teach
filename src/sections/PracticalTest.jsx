@@ -2,14 +2,7 @@ import { useState } from 'react';
 import Section from '../components/Section.jsx';
 import { useApp } from '../AppContext.jsx';
 
-const AVATARS = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
-];
-
-const big = (url) => `${url}?auto=format&fit=crop&w=300&q=80`;
-const thumb = (url) => `${url}?auto=format&fit=crop&w=100&q=80`;
+const AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
 
 // Each preset is a complete style set, so switching between them is
 // predictable instead of layering leftovers from the previous pick.
@@ -99,28 +92,10 @@ const REFERENCE_PROMPT =
     'Match the layout, spacing, and modern color palette of this reference screenshot, but adapt it for my developer portfolio.';
 
 export default function PracticalTest() {
-    const [avatar, setAvatar] = useState(big(AVATARS[0]));
-    const [activeThumb, setActiveThumb] = useState(0);
     const [polish, setPolish] = useState('none');
     const { play, showToast, copyText, lessonCompleted, completeLesson } = useApp();
 
     const style = PRESETS[polish];
-
-    function pickAvatar(url, idx) {
-        play('click');
-        setAvatar(big(url));
-        setActiveThumb(idx);
-        showToast('Avatar image updated!');
-    }
-
-    function applyCustomAvatar(url) {
-        if (url && url.trim().length > 5) {
-            play('click');
-            setAvatar(url.trim());
-            setActiveThumb(-1);
-            showToast('Custom image applied!');
-        }
-    }
 
     function applyPolish(key) {
         play(key === 'none' ? 'click' : 'magic');
@@ -161,7 +136,7 @@ export default function PracticalTest() {
                 <div className="hero-preview" style={style.canvas}>
                     <div className="hero-glow" style={style.glow} />
 
-                    <img src={avatar} alt="Profile Photo" className="hero-avatar" style={style.img} />
+                    <img src={AVATAR} alt="Profile Photo" className="hero-avatar" style={style.img} />
 
                     <div className="hero-badge" style={style.badge}>Available for new projects</div>
                     <h2 className="hero-name" style={style.title}>Alex Rivera</h2>
@@ -195,31 +170,7 @@ export default function PracticalTest() {
                 <div className="test-controls">
                     <div>
                         <div className="control-label">
-                            <span className="control-step">1</span> Choose or enter an avatar photo
-                        </div>
-                        <div className="avatar-picker-row">
-                            {AVATARS.map((url, idx) => (
-                                <button
-                                    className={`avatar-thumb${activeThumb === idx ? ' active' : ''}`}
-                                    key={url}
-                                    onClick={() => pickAvatar(url, idx)}
-                                >
-                                    <img src={thumb(url)} alt={`Avatar ${idx + 1}`} />
-                                </button>
-                            ))}
-                            <input
-                                type="text"
-                                className="input-text"
-                                placeholder="Or paste any custom image URL (https://...)"
-                                onChange={(e) => applyCustomAvatar(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="control-label">
-                            <span className="control-step">2</span> Try an iterative polish style — this is what
-                            prompting a refinement looks like
+                            Try an iterative polish style — this is what prompting a refinement looks like
                         </div>
                         <div className="polish-grid">
                             {POLISH_BUTTONS.map(([key, label]) => (
