@@ -76,17 +76,17 @@ const PROMPT_CHIPS = [
     },
 ];
 
-const MASTER_PROMPT = `"Act as a senior frontend developer. I'm attaching my photo — use it as the avatar in a portfolio hero section for me.
+const MASTER_PROMPT = `"Act as a senior frontend developer with a strong eye for modern web design. I'm attaching my photo — build it into a portfolio hero section as the face of the page, the first thing anyone sees, not a small avatar tucked in a corner.
 
 Follow the PCE formula, and stop after each step so I can review:
 
-PLAN — outline the structure of the hero section first. No code yet.
+PLAN — outline the hero's structure and the visual direction you'd choose: layout, type scale, colour palette, and how my photo anchors the composition. No code yet.
 
-CONSTRAIN — a single index.html file, Tailwind CSS via CDN, my attached photo as the avatar, no other dependencies.
+CONSTRAIN — a single Hero.jsx component in a React + Vite project, styled with Tailwind CSS, using my attached photo. Function components and hooks only, no extra dependencies.
 
-EXECUTE — build one piece at a time: the semantic layout first, then the styling, then the hover animations.
+EXECUTE — build one piece at a time: the JSX structure first, then the Tailwind styling, then the hover and entrance motion.
 
-The hero should contain my photo as a rounded avatar, a bold headline, a one-line bio, two CTA buttons, and a soft glow behind the avatar. Make it fully responsive, collapsing to a centered single column under 640px."`;
+Design direction: make it look like a real designer's portfolio, not a template. Give my photo generous scale and a composition that feels deliberate — soft ambient light behind it, a sense of depth, and plenty of breathing room. Pair it with a bold headline, one clear line about what I do, and two CTA buttons with smooth hover transitions. Fully responsive, collapsing to a centered single column under 640px."`;
 
 const REFERENCE_PROMPT =
     'Match the layout, spacing, and modern color palette of this reference screenshot, but adapt it for my developer portfolio.';
