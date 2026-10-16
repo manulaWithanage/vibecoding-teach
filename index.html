@@ -1,0 +1,2799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Lesson 1: Intro to Vibe Coding | Teaching Masterclass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+            
+            /* Light Theme */
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-subtle: #f1f5f9;
+            --bg-hover: #e2e8f0;
+            --border: #e2e8f0;
+            
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --primary-border: #c7d2fe;
+            
+            --accent-green: #10b981;
+            --accent-green-light: #ecfdf5;
+            --accent-rose: #f43f5e;
+            --accent-rose-light: #fff1f2;
+            --accent-amber: #f59e0b;
+            --accent-amber-light: #fffbeb;
+            --accent-purple: #8b5cf6;
+            --accent-purple-light: #f5f3ff;
+            
+            --code-bg: #0f172a;
+            --code-text: #38bdf8;
+            --code-header: #1e293b;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 10px -1px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+            
+            --sidebar-width: 280px;
+            --header-height: 64px;
+        }
+
+        [data-theme="dark"] {
+            --bg-base: #090d16;
+            --bg-surface: #111827;
+            --bg-surface-subtle: #1e293b;
+            --bg-hover: #334155;
+            --border: #1e293b;
+            
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --primary-light: rgba(99, 102, 241, 0.15);
+            --primary-border: rgba(99, 102, 241, 0.3);
+            
+            --accent-green: #34d399;
+            --accent-green-light: rgba(16, 185, 129, 0.15);
+            --accent-rose: #fb7185;
+            --accent-rose-light: rgba(244, 63, 94, 0.15);
+            --accent-amber: #fbbf24;
+            --accent-amber-light: rgba(245, 158, 11, 0.15);
+            --accent-purple: #a78bfa;
+            --accent-purple-light: rgba(139, 92, 246, 0.15);
+            
+            --code-bg: #030712;
+            --code-text: #7dd3fc;
+            --code-header: #0f172a;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 10px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background 0.2s ease, color 0.2s ease;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Top Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
+            width: 0%;
+            z-index: 1000;
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99999;
+        }
+
+        /* Top Navigation Header */
+        .top-navbar {
+            position: sticky;
+            top: 0;
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        [data-theme="dark"] .top-navbar {
+            background: rgba(17, 24, 39, 0.9);
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .course-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid var(--primary-border);
+        }
+
+        .icon-btn {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-hover);
+            transform: scale(1.05);
+        }
+
+        .mobile-toggle-btn {
+            display: none;
+        }
+
+        .btn-jump-test {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.45rem 0.95rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .btn-jump-test:hover {
+            background: var(--primary-hover);
+        }
+
+        /* App Layout with Sticky Sidebar */
+        .layout-wrapper {
+            display: flex;
+            min-height: calc(100vh - var(--header-height));
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Mobile Sidebar Backdrop */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 140;
+        }
+
+        .sidebar-backdrop.active {
+            display: block;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: var(--header-height);
+            height: calc(100vh - var(--header-height));
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            z-index: 150;
+        }
+
+        .sidebar-header-mobile {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-heading {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .module-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .module-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .module-item a:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .module-item.active a {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .module-item.next-class a {
+            border: 1px dashed var(--primary-border);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .module-item.next-class a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .module-status {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .status-current {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+        }
+        .status-upcoming {
+            border: 1.5px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        .status-next {
+            background: var(--accent-amber-light);
+            border: 1.5px solid var(--accent-amber);
+            color: var(--accent-amber);
+            font-weight: 700;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .toc-item a {
+            display: block;
+            padding: 0.45rem 0.65rem;
+            border-left: 2px solid transparent;
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.15s;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .toc-item a:hover {
+            color: var(--primary);
+            background: var(--bg-hover);
+        }
+
+        .toc-item.active a {
+            border-left-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--primary-light);
+        }
+
+        .toc-item.passed a {
+            color: var(--text-main);
+        }
+
+        .toc-item.passed a::after {
+            content: " ✓";
+            color: #10b981;
+            font-weight: 700;
+            float: right;
+            font-size: 0.8rem;
+        }
+
+        .course-progress-box {
+            margin-top: auto;
+            padding: 1.1rem;
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .progress-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: var(--border);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 14%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            border-radius: 999px;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        /* Main Content Container */
+        .content-container {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Lesson Header Banner */
+        .lesson-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lesson-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .meta-pill.difficulty {
+            background: var(--accent-green-light);
+            color: var(--accent-green);
+        }
+
+        .meta-pill.time {
+            background: var(--bg-surface-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .lesson-title {
+            font-size: clamp(2rem, 4.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.25;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .lesson-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Lesson Sections */
+        .lesson-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            scroll-margin-top: calc(var(--header-height) + 1.5rem);
+        }
+
+        .section-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .section-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-surface-subtle);
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            line-height: 1.65;
+        }
+
+        strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* 3-Part Mindset Grid */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .info-card {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .info-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .info-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Download Cards Grid (Section 2) */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 1.25rem;
+            margin: 1.25rem 0 1.75rem 0;
+        }
+
+        .download-card {
+            background: var(--bg-surface);
+            border: 1.5px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .download-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .download-card.highlight {
+            border-color: var(--primary);
+            background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg-surface) 100%);
+        }
+
+        .download-badge {
+            display: inline-block;
+            align-self: flex-start;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            background: var(--primary);
+            color: white;
+            margin-bottom: 0.85rem;
+        }
+
+        .download-badge.alt {
+            background: #475569;
+        }
+
+        .download-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 1rem;
+        }
+
+        .download-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+        }
+
+        .download-features span {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .download-features code {
+            font-family: var(--font-mono);
+            background: var(--bg-surface-subtle);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.925rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            width: 100%;
+        }
+
+        .btn-download:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .download-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .code-install-box {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 0.85rem;
+            margin: 0.5rem 0 0.85rem 0;
+        }
+
+        .code-install-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .code-install-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.45rem 0.65rem;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: #38bdf8;
+        }
+
+        .btn-copy-sm {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+        }
+
+        .btn-copy-sm:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Model Selector Cards (Section 3) */
+        .model-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.85rem;
+            margin: 1.25rem 0;
+        }
+
+        .model-tier-card {
+            background: var(--bg-surface);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 1.15rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .model-tier-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .model-tier-card.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+            background: var(--primary-light);
+        }
+
+        .model-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .model-name-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        .model-subname {
+            font-size: 0.78rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            margin-bottom: 0.65rem;
+        }
+
+        .model-tags-row {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+
+        .model-badge-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: rgba(16, 185, 129, 0.18);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .badge-med {
+            background: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-new {
+            background: rgba(147, 51, 234, 0.15);
+            color: #9333ea;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+        }
+
+        .badge-notice {
+            background: rgba(100, 116, 139, 0.15);
+            color: #64748b;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        .model-best-for {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            line-height: 1.45;
+        }
+
+        .model-footer-stats {
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* IDE Dropdown Menu Replica */
+        .model-menu-mockup {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            max-width: 320px;
+            margin: 1rem auto;
+            color: #f4f4f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .menu-mock-header {
+            font-size: 0.75rem;
+            color: #71717a;
+            padding: 0.35rem 0.65rem;
+            font-weight: 600;
+        }
+
+        .menu-mock-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .menu-mock-item:hover, .menu-mock-item.active {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu-mock-name {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 500;
+        }
+
+        .menu-mock-tags {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+        }
+
+        .menu-tag-pill {
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            background: #27272a;
+            color: #a1a1aa;
+        }
+
+        .menu-tag-pill.new {
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.15);
+        }
+
+        .menu-mock-shortcut {
+            border-top: 1px solid #27272a;
+            margin-top: 0.4rem;
+            padding: 0.45rem 0.65rem 0.2rem 0.65rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #71717a;
+        }
+
+        .menu-mock-shortcut kbd {
+            background: #27272a;
+            color: #d4d4d8;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+        }
+
+        /* Interactive Scenario Box */
+        .scenario-box {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+            transition: all 0.25s ease;
+        }
+
+        .scenario-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-prompt {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.85rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.825rem;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        /* Step List (PCE) */
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .step-badge {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        /* Code & Prompt Container */
+        .code-container {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .code-header {
+            background: var(--code-header);
+            padding: 0.4rem 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #94a3b8;
+            padding: 0.2rem 0.55rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-copy:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .code-container pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-container code {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--code-text);
+            line-height: 1.55;
+            background: transparent;
+            padding: 0;
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Callout Box */
+        .callout-box {
+            padding: 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            margin: 1.25rem 0;
+            font-size: 0.925rem;
+            background: var(--accent-amber-light);
+            border: 1px solid #fde68a;
+            color: var(--text-main);
+        }
+
+        /* Interactive Quiz Card */
+        .quiz-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            background: var(--bg-surface-subtle);
+            margin-top: 1rem;
+        }
+
+        .quiz-question {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.85rem;
+        }
+
+        .quiz-option {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            text-align: left;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .quiz-option.correct {
+            background: var(--accent-green-light) !important;
+            border-color: var(--accent-green) !important;
+            color: var(--accent-green) !important;
+            font-weight: 700;
+        }
+
+        .quiz-option.wrong {
+            background: var(--accent-rose-light) !important;
+            border-color: var(--accent-rose) !important;
+            color: var(--accent-rose) !important;
+            font-weight: 700;
+        }
+
+        /* -------------------------------------------------------------
+           FIRST TEST: HERO SECTION WORKBENCH
+           ------------------------------------------------------------- */
+        .test-box {
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-top: 1.25rem;
+        }
+
+        .test-box-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .test-box-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Hero Live Preview Area */
+        .hero-preview {
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 100%);
+            color: white;
+            padding: 2.75rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, transparent 70%);
+            filter: blur(35px);
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .hero-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            margin: 0 auto 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(6px);
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #c7d2fe;
+            margin-bottom: 0.85rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .hero-name {
+            font-size: clamp(1.8rem, 4vw, 2.25rem);
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .hero-bio {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            max-width: 440px;
+            margin: 0 auto 1.35rem;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-preview-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            font-weight: 600;
+            padding: 0.65rem 1.35rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-preview-primary:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-preview-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            padding: 0.65rem 1.35rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        /* Controls Section */
+        .test-controls {
+            padding: 1.5rem;
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .control-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar-picker-row {
+            display: flex;
+            gap: 0.65rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .avatar-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .avatar-thumb.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .avatar-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .input-text {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.55rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: var(--bg-base);
+            color: var(--text-main);
+            height: 44px;
+        }
+
+        /* 1-Click Polish Buttons */
+        .polish-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .btn-polish {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            color: var(--text-main);
+        }
+
+        .btn-polish:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .btn-polish:active {
+            transform: scale(0.97);
+        }
+
+        /* Practical UI Polish & Reference Images Guide */
+        .polish-guide-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .polish-step-card {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.15rem;
+            margin-bottom: 1rem;
+        }
+
+        .polish-step-card h4 {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .polish-step-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+            line-height: 1.5;
+        }
+
+        .prompt-chip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 0.65rem;
+            margin-top: 0.75rem;
+        }
+
+        .prompt-chip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.825rem;
+            color: var(--text-main);
+            text-align: left;
+        }
+
+        .prompt-chip:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .prompt-chip-text {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .ref-image-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(236, 72, 153, 0.08));
+            border: 1.5px dashed var(--accent-amber);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .ref-image-icon {
+            font-size: 2rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .ref-image-content h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+        }
+
+        .ref-image-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        /* Lesson Completion Box */
+        .complete-box {
+            text-align: center;
+            padding: 2.25rem 1.5rem;
+            margin-top: 2rem;
+            background: var(--accent-green-light);
+            border: 1px solid #a7f3d0;
+            border-radius: 16px;
+        }
+
+        .btn-finish {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-finish:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        /* Next Class Modal / Drawer */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon-badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .modal-body-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .next-class-points {
+            background: var(--bg-surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .next-class-points li {
+            margin-bottom: 0.4rem;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-modal-close {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-close:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+            z-index: 10000;
+            max-width: 90vw;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 200;
+                transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: var(--shadow-lg);
+                width: 290px;
+            }
+            .sidebar.mobile-open {
+                left: 0;
+            }
+            .sidebar-header-mobile {
+                display: flex;
+            }
+            .mobile-toggle-btn {
+                display: flex;
+            }
+            .content-container {
+                padding: 1.75rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .lesson-section {
+                padding: 1.35rem 1rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+            }
+            .btn-preview-primary, .btn-preview-secondary {
+                width: 100%;
+            }
+            .custom-polish-row {
+                flex-direction: column;
+            }
+            .btn-magic {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Top Reading Progress Indicator -->
+    <div id="progress-bar"></div>
+
+    <!-- Fullscreen Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- Next Class Modal -->
+    <div class="modal-overlay" id="next-class-modal">
+        <div class="modal-card">
+            <div class="modal-icon-badge">🐙</div>
+            <h3 class="modal-title">Next Class: How to Handle Git!</h3>
+            <p class="modal-body-text">
+                Awesome work finishing Lesson 1! We'll cover <strong>Lesson 2 in our next class</strong>. You won't have to fear confusing terminal commands ever again!
+            </p>
+            <div class="next-class-points">
+                <strong style="color:var(--text-main); display:block; margin-bottom:0.5rem;">What you'll master in the next session:</strong>
+                <li><span>✅</span> How to use AI agents to write git commits & push to GitHub</li>
+                <li><span>✅</span> How to create feature branches without breaking your main app</li>
+                <li><span>✅</span> How to deploy your live portfolio online for free with GitHub Pages</li>
+            </div>
+            <button class="btn-modal-close" onclick="closeNextClassModal()">Awesome, Got It! 🙌</button>
+        </div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="top-navbar">
+        <div class="nav-left">
+            <button class="icon-btn mobile-toggle-btn" id="mobile-sidebar-toggle" title="Open Navigation Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="#" class="brand-link">
+                <div class="brand-icon">⚡</div>
+                <span>Vibe Academy</span>
+            </a>
+            <span class="course-badge">Lesson 1 of 5</span>
+        </div>
+
+        <div class="nav-right">
+            <!-- Sound Toggle Button -->
+            <button class="icon-btn" id="sound-toggle" title="Toggle Sound">
+                <span id="sound-icon">🔊</span>
+            </button>
+            
+            <!-- Dark Mode Toggle Button -->
+            <button class="icon-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+                <span id="theme-icon">🌙</span>
+            </button>
+
+            <a href="#section-test" class="btn-jump-test" onclick="playUiSound('click')">
+                <span>First Test</span> 🧪
+            </a>
+        </div>
+    </header>
+
+    <!-- App Layout with Sidebar -->
+    <div class="layout-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header-mobile">
+                <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700;">
+                    <div class="brand-icon" style="width:28px; height:28px; font-size:1rem;">⚡</div>
+                    <span>Course Curriculum</span>
+                </div>
+                <button class="icon-btn" id="sidebar-close-btn" style="width:32px; height:32px;">✕</button>
+            </div>
+
+            <div>
+                <h4 class="sidebar-heading">Course Track</h4>
+                <ul class="module-list">
+                    <!-- Lesson 1 -->
+                    <li class="module-item active" id="module-1">
+                        <a href="#top" onclick="closeMobileSidebar(); playUiSound('click');">
+                            <span class="module-status status-current" id="badge-1">1</span>
+                            <span>Intro to Vibe Coding</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Lesson 2 (Git - Scheduled for Next Class) -->
+                    <li class="module-item next-class" id="module-2">
+                        <a href="javascript:void(0);" onclick="showNextClassModal()">
+                            <span class="module-status status-next" id="badge-2">2</span>
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-weight:600; color:var(--text-main);">Handling Git with AI 🐙</span>
+                                <span style="font-size:0.72rem; color:var(--accent-amber); font-weight:700;">📅 Coming in Next Class</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Lesson 3 -->
+                    <li class="module-item">
+                        <a href="javascript:void(0);" style="opacity: 0.55; cursor: not-allowed;" onclick="showToast('Complete Lesson 2 in next class to unlock!')">
+                            <span class="module-status status-upcoming">3</span>
+                            <span>Terminal Agent Workflows</span>
+                        </a>
+                    </li>
+
+                    <!-- Lesson 4 -->
+                    <li class="module-item">
+                        <a href="javascript:void(0);" style="opacity: 0.55; cursor: not-allowed;" onclick="showToast('Upcoming lesson!')">
+                            <span class="module-status status-upcoming">4</span>
+                            <span>Multi-file Debugging</span>
+                        </a>
+                    </li>
+
+                    <!-- Lesson 5 -->
+                    <li class="module-item">
+                        <a href="javascript:void(0);" style="opacity: 0.55; cursor: not-allowed;" onclick="showToast('Upcoming capstone!')">
+                            <span class="module-status status-upcoming">5</span>
+                            <span>Deploying Live Web Apps</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="sidebar-heading">In This Lesson</h4>
+                <ul class="toc-list" id="toc-list">
+                    <li class="toc-item active"><a href="#section-what" onclick="closeMobileSidebar()">1. What is Vibe Coding?</a></li>
+                    <li class="toc-item"><a href="#section-workspace" onclick="closeMobileSidebar()">2. Download & Setup</a></li>
+                    <li class="toc-item"><a href="#section-models" onclick="closeMobileSidebar()">3. Real Models & Guide</a></li>
+                    <li class="toc-item"><a href="#section-prompting" onclick="closeMobileSidebar()">4. The 3-Step PCE Formula</a></li>
+                    <li class="toc-item"><a href="#section-debugging" onclick="closeMobileSidebar()">5. Easy Bug Fixing</a></li>
+                    <li class="toc-item"><a href="#section-quiz" onclick="closeMobileSidebar()">6. Quick Knowledge Check</a></li>
+                    <li class="toc-item"><a href="#section-test" onclick="closeMobileSidebar()">7. Practical Test & UI Polish</a></li>
+                </ul>
+            </div>
+
+            <div class="course-progress-box">
+                <div class="progress-label-row">
+                    <span>Lesson 1 Progress</span>
+                    <span id="progress-percent">14%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill" style="width: 14%;"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-container" id="top">
+            
+            <!-- Lesson Header Banner -->
+            <header class="lesson-header">
+                <div class="lesson-meta-bar">
+                    <span class="meta-pill difficulty">🟢 Beginner</span>
+                    <span class="meta-pill time">⏱️ 12 min read + test</span>
+                    <span>•</span>
+                    <span>Antigravity & Agent 2.0</span>
+                </div>
+                <h1 class="lesson-title">Lesson 1: Introduction to Vibe Coding 👋</h1>
+                <p class="lesson-subtitle">Welcome! In this lesson, you'll learn how to build real software by directing AI agents in plain English. No syntax memorization. Just clear ideas, quick feedback, and fast building.</p>
+            </header>
+
+            <!-- 1. What is Vibe Coding -->
+            <section class="lesson-section" id="section-what">
+                <div class="section-header-row">
+                    <h2 class="section-title">1. What is Vibe Coding?</h2>
+                    <span class="section-tag">Mindset</span>
+                </div>
+                <p>Traditional coding meant typing every bracket and semicolon manually. Vibe coding turns you into the <strong>Product Architect</strong>: you describe what you want, review the result, and ask for tweaks.</p>
+
+                <div class="grid-cards">
+                    <div class="info-card">
+                        <h4>⌨️ Traditional Way</h4>
+                        <p>Memorizing syntax rules, reading documentation manuals, and fighting syntax typos for hours.</p>
+                    </div>
+                    <div class="info-card" style="border-left: 3px solid var(--primary); background:var(--primary-light);">
+                        <h4 style="color:var(--primary);">🚀 The Vibe Way</h4>
+                        <p>Express your ideas in natural language. The autonomous agent writes the code and installs the assets.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>👑 Your Job</h4>
+                        <p>Focus on UX, aesthetics, features, and testing the live app in your browser.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Workspace Setup & Downloads -->
+            <section class="lesson-section" id="section-workspace">
+                <div class="section-header-row">
+                    <h2 class="section-title">2. Download & Setup Antigravity</h2>
+                    <span class="section-tag">Downloads & Setup</span>
+                </div>
+                <p>Google Antigravity is the autonomous AI-first coding environment. Choose how you want to build: download the standalone <strong>Antigravity IDE</strong> desktop app, or use the high-speed <strong>Antigravity 2.0 CLI</strong> in your favorite terminal.</p>
+
+                <!-- Download Options Grid -->
+                <div class="download-grid">
+                    <!-- Option A: Antigravity IDE -->
+                    <div class="download-card highlight">
+                        <div class="download-badge">🌟 Recommended for Visual Vibe Coding</div>
+                        <div style="font-size:2rem; margin-bottom:0.4rem;">🚀</div>
+                        <h3>Antigravity IDE</h3>
+                        <p class="download-desc">The complete desktop editor. Built specifically for agentic pair-programming with visual code diffs, interactive chat, live browser previews, and file management.</p>
+                        
+                        <div class="download-features">
+                            <span>✓ Native Autonomous Agent with File Read/Write</span>
+                            <span>✓ Visual Diff Review & 1-Click Code Revert</span>
+                            <span>✓ Live Browser Preview with Hot Reload</span>
+                            <span>✓ Shortcut: <code>Ctrl + /</code> to Switch Models</span>
+                        </div>
+
+                        <div>
+                            <a href="https://antigravity.google/download" target="_blank" class="btn-download" onclick="playUiSound('click'); showToast('Opening Antigravity IDE Download page!');">
+                                <span>⬇️ Download Antigravity IDE</span>
+                            </a>
+                            <span class="download-meta">Available for Windows, macOS & Linux</span>
+                        </div>
+                    </div>
+
+                    <!-- Option B: Antigravity 2.0 CLI -->
+                    <div class="download-card">
+                        <div class="download-badge alt">⚡ For Terminal & Power Users</div>
+                        <div style="font-size:2rem; margin-bottom:0.4rem;">💻</div>
+                        <h3>Antigravity 2.0 (CLI)</h3>
+                        <p class="download-desc">The high-speed headless terminal agent. Run autonomous coding loops, background subagents, and sidecar tools directly from Windows Terminal, PowerShell, or macOS zsh.</p>
+
+                        <div class="code-install-box">
+                            <div class="code-install-label">1. Global Install via npm:</div>
+                            <div class="code-install-row">
+                                <code>npm install -g @google/antigravity</code>
+                                <button class="btn-copy-sm" onclick="copySnippetText('npm install -g @google/antigravity')">📋</button>
+                            </div>
+                            <div class="code-install-label" style="margin-top:0.6rem;">2. Launch in any folder:</div>
+                            <div class="code-install-row">
+                                <code>agy</code>
+                                <button class="btn-copy-sm" onclick="copySnippetText('agy')">📋</button>
+                            </div>
+                        </div>
+
+                        <div class="download-features" style="margin-top:0.5rem;">
+                            <span>✓ Terminal-native Agentic Pairing</span>
+                            <span>✓ Background Task Scheduling & Subagents</span>
+                            <span>✓ Works with your existing Neovim or VS Code</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IDE Tour / 3 Windows -->
+                <h3 style="font-size:1.05rem; font-weight:700; margin:1.25rem 0 0.5rem 0;">Inside the Antigravity IDE Workspace</h3>
+                <div class="grid-cards">
+                    <div class="info-card">
+                        <h4>📁 Left: Explorer</h4>
+                        <p>Your project directory. Watch files appear live as the agent generates them.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>🤖 Right: AI Chat</h4>
+                        <p>Your command center. Prompt the agent, request tweaks, or drop reference screenshots.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>💻 Bottom: Terminal</h4>
+                        <p>Where your local server runs. When errors happen, the agent can auto-fix them.</p>
+                    </div>
+                </div>
+
+                <div class="callout-box">
+                    <div style="font-size:1.4rem;">💡</div>
+                    <div>
+                        <strong>Golden Rule for Friends:</strong> Always create a clean, dedicated folder for each project before opening it in Antigravity. That keeps the AI focused 100% on your project without clutter!
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Models With Real Names & Which is Best For Which -->
+            <section class="lesson-section" id="section-models">
+                <div class="section-header-row">
+                    <h2 class="section-title">3. Model Names: Which One Is Best For Which?</h2>
+                    <span class="section-tag">Model Guide</span>
+                </div>
+                <p>Antigravity gives you direct access to the latest frontier models. Tap any model card below to see its exact strengths, latency, and real-world prompt examples:</p>
+
+                <!-- Model Cards Grid (5 Authentic Models from Antigravity) -->
+                <div class="model-cards-grid">
+                    <!-- 1. Gemini 3.8 Flash (High Priority / Active Default) -->
+                    <div class="model-tier-card active" id="card-flash" onclick="pickModelTier('flash')">
+                        <div>
+                            <div class="model-top">
+                                <div class="model-tags-row">
+                                    <span class="model-badge-tag badge-high">High Priority</span>
+                                    <span class="model-badge-tag" style="background:rgba(16,185,129,0.15); color:#10b981;">✓ Default</span>
+                                </div>
+                                <span>⚡</span>
+                            </div>
+                            <div class="model-name-title">Gemini 3.8 Flash</div>
+                            <div class="model-subname">Sub-second • High Rate Limit</div>
+                            <p class="model-best-for">
+                                <strong>Best for:</strong> Instant UI styling, CSS hover effects, fixing typos, single-file scripts, and rapid iterations with zero waiting.
+                            </p>
+                        </div>
+                        <div class="model-footer-stats">
+                            <span>Response: <strong>&lt; 0.8s</strong></span>
+                            <span>Speed: <strong>Ultra Fast</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Gemini 4 Argon -->
+                    <div class="model-tier-card" id="card-argon" onclick="pickModelTier('argon')">
+                        <div>
+                            <div class="model-top">
+                                <div class="model-tags-row">
+                                    <span class="model-badge-tag badge-med">Medium</span>
+                                    <span class="model-badge-tag badge-new">New</span>
+                                </div>
+                                <span>🧠</span>
+                            </div>
+                            <div class="model-name-title">Gemini 4 Argon</div>
+                            <div class="model-subname">Multimodal Reasoning</div>
+                            <p class="model-best-for">
+                                <strong>Best for:</strong> Deep system planning, analyzing reference image screenshots, complex logic, and end-to-end full-stack architectures.
+                            </p>
+                        </div>
+                        <div class="model-footer-stats">
+                            <span>Response: <strong>2–3s</strong></span>
+                            <span>Vision: <strong>Exceptional</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Claude Sonnet 5.5 -->
+                    <div class="model-tier-card" id="card-sonnet" onclick="pickModelTier('sonnet')">
+                        <div>
+                            <div class="model-top">
+                                <div class="model-tags-row">
+                                    <span class="model-badge-tag badge-med">Medium</span>
+                                    <span class="model-badge-tag badge-new">New</span>
+                                </div>
+                                <span>🎨</span>
+                            </div>
+                            <div class="model-name-title">Claude Sonnet 5.5</div>
+                            <div class="model-subname">Frontend & Aesthetics Maestro</div>
+                            <p class="model-best-for">
+                                <strong>Best for:</strong> Modern web aesthetics, elegant typography, glassmorphism layouts, clean Tailwind styling, and surgical refactors.
+                            </p>
+                        </div>
+                        <div class="model-footer-stats">
+                            <span>Response: <strong>2–3s</strong></span>
+                            <span>Aesthetic: <strong>Top-Tier</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Claude Opus 5.5 -->
+                    <div class="model-tier-card" id="card-opus" onclick="pickModelTier('opus')">
+                        <div>
+                            <div class="model-top">
+                                <div class="model-tags-row">
+                                    <span class="model-badge-tag badge-med">Medium</span>
+                                    <span class="model-badge-tag badge-new">New</span>
+                                </div>
+                                <span>🏗️</span>
+                            </div>
+                            <div class="model-name-title">Claude Opus 5.5</div>
+                            <div class="model-subname">Deep Architecture Powerhouse</div>
+                            <p class="model-best-for">
+                                <strong>Best for:</strong> Large multi-file codebases, complex database schemas, deep algorithmic debugging, and multi-package refactoring.
+                            </p>
+                        </div>
+                        <div class="model-footer-stats">
+                            <span>Response: <strong>4–6s</strong></span>
+                            <span>Depth: <strong>Maximum</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- 5. GPT-OSS 120B -->
+                    <div class="model-tier-card" id="card-gptoss" onclick="pickModelTier('gptoss')">
+                        <div>
+                            <div class="model-top">
+                                <div class="model-tags-row">
+                                    <span class="model-badge-tag badge-med">Medium</span>
+                                    <span class="model-badge-tag badge-notice">Notice ⓘ</span>
+                                </div>
+                                <span>🌐</span>
+                            </div>
+                            <div class="model-name-title">GPT-OSS 120B</div>
+                            <div class="model-subname">Open Weights (Medium)</div>
+                            <p class="model-best-for">
+                                <strong>Best for:</strong> Open-source ecosystems, local and flexible execution, private developer pipelines, and zero-lock-in utilities.
+                            </p>
+                        </div>
+                        <div class="model-footer-stats">
+                            <span>Response: <strong>1.5s</strong></span>
+                            <span>Ecosystem: <strong>Open</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Authentic Antigravity Model Menu Visual Mockup -->
+                <div style="margin: 1.5rem 0; display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">
+                        Exact Menu Inside Antigravity (Press <kbd style="background:var(--border); padding:0.15rem 0.4rem; border-radius:4px; font-family:var(--font-mono); color:var(--text-main);">Ctrl + /</kbd>)
+                    </span>
+                    <div class="model-menu-mockup">
+                        <div class="menu-mock-header">Model</div>
+                        <div class="menu-mock-item" onclick="pickModelTier('argon')">
+                            <span class="menu-mock-name">Gemini 4 Argon</span>
+                            <div class="menu-mock-tags">
+                                <span class="menu-tag-pill">Medium</span>
+                                <span class="menu-tag-pill new">New</span>
+                                <span style="opacity:0.4;">›</span>
+                            </div>
+                        </div>
+                        <div class="menu-mock-item active" onclick="pickModelTier('flash')">
+                            <span class="menu-mock-name" style="font-weight:700; color:#ffffff;">Gemini 3.8 Flash</span>
+                            <div class="menu-mock-tags">
+                                <span class="menu-tag-pill" style="color:#34d399;">High</span>
+                                <span style="color:#10b981; font-weight:bold;">✓</span>
+                            </div>
+                        </div>
+                        <div class="menu-mock-item" onclick="pickModelTier('opus')">
+                            <span class="menu-mock-name">Claude Opus 5.5</span>
+                            <div class="menu-mock-tags">
+                                <span class="menu-tag-pill">Medium</span>
+                                <span class="menu-tag-pill new">New</span>
+                                <span style="opacity:0.4;">›</span>
+                            </div>
+                        </div>
+                        <div class="menu-mock-item" onclick="pickModelTier('sonnet')">
+                            <span class="menu-mock-name">Claude Sonnet 5.5</span>
+                            <div class="menu-mock-tags">
+                                <span class="menu-tag-pill">Medium</span>
+                                <span class="menu-tag-pill new">New</span>
+                                <span style="opacity:0.4;">›</span>
+                            </div>
+                        </div>
+                        <div class="menu-mock-item" onclick="pickModelTier('gptoss')">
+                            <span class="menu-mock-name">GPT-OSS 120B (Medium)</span>
+                            <div class="menu-mock-tags">
+                                <span class="menu-tag-pill">Notice ⓘ</span>
+                            </div>
+                        </div>
+                        <div class="menu-mock-shortcut">
+                            <span>Select Model</span>
+                            <kbd>Ctrl+/</kbd>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Real-World Scenario Callout -->
+                <div class="scenario-box" id="scenario-display">
+                    <div class="scenario-title" id="scenario-title">
+                        <span>⚡</span>
+                        <span>Gemini 3.8 Flash (High Priority • Default)</span>
+                    </div>
+                    <p style="font-size:0.875rem; margin-bottom:0.35rem;" id="scenario-desc">
+                        Sub-second speed and highest throughput. Perfect when you're tweaking button hover effects, changing Tailwind color palettes, or making fast edits without waiting.
+                    </p>
+                    <div class="scenario-prompt" id="scenario-example">
+                        Example prompt: "Make the primary CTA button have a glowing emerald border and a smooth hover scale animation."
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. PCE Prompting -->
+            <section class="lesson-section" id="section-prompting">
+                <div class="section-header-row">
+                    <h2 class="section-title">4. The 3-Step PCE Formula</h2>
+                    <span class="section-tag">Prompting Secret</span>
+                </div>
+                <p>Never ask AI to build an entire massive application in one prompt. Use the <strong>PCE Framework</strong>:</p>
+
+                <div class="step-item">
+                    <div class="step-badge">P</div>
+                    <div class="step-content">
+                        <h4>Plan First</h4>
+                        <p>Ask for a clear outline before generating any code.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-badge">C</div>
+                    <div class="step-content">
+                        <h4>Constrain</h4>
+                        <p>Set clear tech limits: <em>"Single-file HTML with Tailwind CSS and an avatar photo."</em></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-badge">E</div>
+                    <div class="step-content">
+                        <h4>Execute</h4>
+                        <p>Instruct the AI to build one section at a time.</p>
+                    </div>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>PCE MASTER PROMPT TEMPLATE</span>
+                        <button class="btn-copy" onclick="copyPrompt('pce-template')">📋 Copy Prompt</button>
+                    </div>
+                    <pre><code id="pce-template">"Act as a Senior Frontend Developer.
+1. Outline the structure to build a clean portfolio hero section before writing code.
+2. Constraints: Single index.html file, Tailwind CSS via CDN, and a placeholder profile image.
+3. Build Step 1: the semantic HTML layout with header and call-to-action buttons."</code></pre>
+                </div>
+            </section>
+
+            <!-- 5. Debugging -->
+            <section class="lesson-section" id="section-debugging">
+                <div class="section-header-row">
+                    <h2 class="section-title">5. Easy Bug Fixing (The Debug Loop)</h2>
+                    <span class="section-tag">No Stress</span>
+                </div>
+                <p>Encountered a red error in your browser console? Don't spend hours searching forums. Use the 3-step debug loop:</p>
+
+                <div class="grid-cards">
+                    <div class="info-card">
+                        <h4>1. Copy Error</h4>
+                        <p>Open Developer Tools (F12) and copy the red error message.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>2. Paste to AI</h4>
+                        <p>Type: <em>"Fix this error while keeping existing styles: [paste error]"</em>.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>3. Test & Enjoy</h4>
+                        <p>Refresh your browser. The AI fixes the code automatically.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Quiz -->
+            <section class="lesson-section" id="section-quiz">
+                <div class="section-header-row">
+                    <h2 class="section-title">6. Quick Knowledge Check ✨</h2>
+                    <span class="section-tag">Test Your Vibe</span>
+                </div>
+                <p>Answer this quick check to test your understanding before starting the hands-on project (sound on!):</p>
+
+                <div class="quiz-card">
+                    <div class="quiz-question">Question: Inside Antigravity, which model has High priority and is best for rapid UI iterations and instant CSS tweaks?</div>
+                    <button class="quiz-option" onclick="handleQuiz(this, true)">
+                        <span>A) ⚡ Gemini 3.8 Flash (High priority, sub-second response)</span>
+                    </button>
+                    <button class="quiz-option" onclick="handleQuiz(this, false)">
+                        <span>B) ⏳ Waiting 5 minutes for a heavyweight offline database reasoning model</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 7. FIRST TEST -->
+            <section class="lesson-section" id="section-test">
+                <div class="section-header-row">
+                    <h2 class="section-title">7. First Practical Test: Portfolio Hero Section</h2>
+                    <span class="section-tag">Interactive Project</span>
+                </div>
+                <p>Your first test is to build a responsive <strong>Portfolio Hero Section</strong> with an image, headline, and call-to-action, and practice <strong>iterative AI polishing</strong> with feedback & reference images!</p>
+
+                <!-- Interactive Hero Builder -->
+                <div class="test-box">
+                    <div class="test-box-header">
+                        <div>
+                            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; opacity:0.85; font-weight:700;">Live Interactive Sandbox</span>
+                            <h3>Portfolio Hero Section Builder</h3>
+                        </div>
+                        <span style="font-size:1.5rem;">🧪</span>
+                    </div>
+
+                    <!-- Live Render Canvas -->
+                    <div class="hero-preview" id="live-hero">
+                        <div class="hero-glow" id="hero-glow"></div>
+                        
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+                             alt="Profile Photo" 
+                             class="hero-avatar" 
+                             id="hero-img">
+
+                        <div class="hero-badge" id="hero-badge">✨ Available for new projects</div>
+                        <h2 class="hero-name" id="hero-name">Alex Rivera</h2>
+                        <p class="hero-bio" id="hero-bio">Full-Stack AI Creator crafting autonomous agent workflows and clean modern web experiences.</p>
+                        
+                        <div class="hero-actions">
+                            <button class="btn-preview-primary" id="btn-cta-1" onclick="playUiSound('click'); showToast('Action: View Projects Clicked!');">View My Work ➔</button>
+                            <button class="btn-preview-secondary" id="btn-cta-2" onclick="playUiSound('click'); showToast('Action: Contact Clicked!');">Get In Touch</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls Toolbar -->
+                    <div class="test-controls">
+                        <!-- 1. Avatar selector -->
+                        <div>
+                            <div class="control-label">1. Choose or Enter Avatar Photo</div>
+                            <div class="avatar-picker-row">
+                                <button class="avatar-thumb active" onclick="setAvatarImg('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80', this)">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar 1">
+                                </button>
+                                <button class="avatar-thumb" onclick="setAvatarImg('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', this)">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Avatar 2">
+                                </button>
+                                <button class="avatar-thumb" onclick="setAvatarImg('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80', this)">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" alt="Avatar 3">
+                                </button>
+                                <input type="text" class="input-text" placeholder="Or paste any custom image URL (https://...)" onchange="setCustomAvatar(this.value)">
+                            </div>
+                        </div>
+
+                        <!-- 2. AI Polish 1-Click Presets -->
+                        <div>
+                            <div class="control-label">2. Preview Iterative Polish Styles (Try clicking to see visual transformations)</div>
+                            <div class="polish-grid">
+                                <button class="btn-polish" onclick="polishHero('glow')">🔮 Glow Aura</button>
+                                <button class="btn-polish" onclick="polishHero('glass')">🪟 Glassmorphism</button>
+                                <button class="btn-polish" onclick="polishHero('cyber')">⚡ Cyber Neon</button>
+                                <button class="btn-polish" onclick="polishHero('clean')">📐 Clean Minimal</button>
+                            </div>
+                        </div>
+
+                        <!-- Master Prompt Export -->
+                        <div style="border-top:1px dashed var(--border); padding-top:1rem; margin-top:0.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <span style="font-size:0.85rem; color:var(--text-secondary); font-weight:600;">Build this in your Antigravity IDE:</span>
+                            <button class="btn-polish" style="background:var(--primary); color:white; border:none;" onclick="copyPrompt('antigravity-hero-prompt')">📋 Copy Master Prompt</button>
+                        </div>
+                        <div style="display:none;" id="antigravity-hero-prompt">"Create a modern personal portfolio hero section in a single index.html file with Tailwind CSS via CDN. Include a rounded avatar image, bold headline, brief bio, and two CTA buttons with smooth hover animations and glowing backdrop lighting."</div>
+                    </div>
+                </div>
+
+                <!-- Real Vibe Coding: How to Polish UI with AI -->
+                <div class="polish-guide-box">
+                    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:1rem;">
+                        <span style="font-size:1.5rem;">🎨</span>
+                        <div>
+                            <h3 style="font-size:1.15rem; font-weight:800; color:var(--text-main); margin:0;">How to Polish Your UI with AI (The Real Workflow)</h3>
+                            <span style="font-size:0.8rem; color:var(--text-secondary);">In actual vibe coding, you don't stop at v1 — you guide the AI with feedback & reference images!</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Review First Draft -->
+                    <div class="polish-step-card">
+                        <h4><span>👀 Step 1:</span> Inspect Your First Draft in the Browser</h4>
+                        <p>When you run your initial prompt in Antigravity, the AI produces a functional first draft. Open it in your browser and check:</p>
+                        <ul style="font-size:0.85rem; color:var(--text-secondary); margin-left:1.2rem; line-height:1.6;">
+                            <li><strong>Spacing & Padding:</strong> Does the layout feel cramped? Give elements room to breathe.</li>
+                            <li><strong>Typography Contrast:</strong> Is the headline bold and readable against the background?</li>
+                            <li><strong>Hover & Micro-interactions:</strong> Do buttons respond when hovered, or do they feel flat?</li>
+                        </ul>
+                    </div>
+
+                    <!-- Step 2: Iterative Micro-Refinements -->
+                    <div class="polish-step-card">
+                        <h4><span>💬 Step 2:</span> Prompt Specific Micro-Refinements</h4>
+                        <p>Instead of generic prompts, ask for specific design upgrades. Click any prompt chip below to copy it:</p>
+                        
+                        <div class="prompt-chip-grid">
+                            <div class="prompt-chip" onclick="copySnippetText('Add a glowing radial backdrop aura behind the avatar image with smooth blur.')">
+                                <div>
+                                    <span style="font-weight:700; display:block; font-size:0.82rem;">🔮 Glow Aura</span>
+                                    <span class="prompt-chip-text">"Add a glowing radial backdrop aura behind the avatar..."</span>
+                                </div>
+                                <span>📋</span>
+                            </div>
+
+                            <div class="prompt-chip" onclick="copySnippetText('Convert the hero container to frosted glass with backdrop-filter blur(16px) and a subtle 1px border.')">
+                                <div>
+                                    <span style="font-weight:700; display:block; font-size:0.82rem;">🪟 Glassmorphism</span>
+                                    <span class="prompt-chip-text">"Convert the hero container to frosted glass with blur..."</span>
+                                </div>
+                                <span>📋</span>
+                            </div>
+
+                            <div class="prompt-chip" onclick="copySnippetText('Make the primary CTA button have a rounded pill shape, gradient background, and a 1.05x hover scale transition.')">
+                                <div>
+                                    <span style="font-weight:700; display:block; font-size:0.82rem;">✨ Button Lift & Glow</span>
+                                    <span class="prompt-chip-text">"Make CTA button have rounded pill shape & hover scale..."</span>
+                                </div>
+                                <span>📋</span>
+                            </div>
+
+                            <div class="prompt-chip" onclick="copySnippetText('Ensure the layout collapses into a clean centered vertical column on mobile screens under 640px.')">
+                                <div>
+                                    <span style="font-weight:700; display:block; font-size:0.82rem;">📱 Mobile Responsive</span>
+                                    <span class="prompt-chip-text">"Ensure layout collapses cleanly on mobile screens..."</span>
+                                </div>
+                                <span>📋</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Reference Images (Superpower) -->
+                    <div class="ref-image-box">
+                        <div class="ref-image-icon">📸</div>
+                        <div class="ref-image-content">
+                            <h4>Pro Tip: Use Reference Images! (The Vibe Coder Secret)</h4>
+                            <p>Found a website, Dribbble shot, or portfolio on Twitter with an aesthetic you love? <strong>Take a screenshot (Win+Shift+S or Cmd+Shift+4)</strong> and drag & drop it directly into your Antigravity chat!</p>
+                            <p style="margin-bottom:0.75rem;">Multimodal models like <strong>Gemini 4 Argon</strong> and <strong>Claude Sonnet 5.5</strong> can inspect the screenshot, extract colors, typography, and spacing, and reproduce the look in your project.</p>
+                            <div class="code-install-row" style="cursor:pointer;" onclick="copySnippetText('Match the layout, spacing, and modern color palette of this reference screenshot, but adapt it for my developer portfolio.')">
+                                <span style="color:#fcd34d;">💡 Click to copy: "Match the layout, spacing, and color palette of this reference screenshot..."</span>
+                                <span style="color:#ffffff;">📋</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion Banner -->
+                <div class="complete-box" id="complete-box-container">
+                    <h3 style="font-size:1.35rem; font-weight:800; margin-bottom:0.4rem; color:#065f46;" id="complete-title">Finished Building Your Hero Section?</h3>
+                    <p style="color:#047857; font-size:0.95rem; margin-bottom:1.25rem;" id="complete-desc">Tap below to mark Lesson 1 as complete and see what's coming up in next class!</p>
+                    <button class="btn-finish" id="finish-btn" onclick="finishLesson()">
+                        <span>🎉</span>
+                        <span>Complete Lesson 1</span>
+                    </button>
+                </div>
+
+                <!-- Next Class Scheduled Callout (Appears after completion) -->
+                <div id="next-class-card" style="display:none; margin-top:1.5rem; background:linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(245, 158, 11, 0.08)); border:2px dashed var(--primary); border-radius:16px; padding:1.75rem; text-align:center;">
+                    <div style="font-size:2rem; margin-bottom:0.4rem;">📅 🐙</div>
+                    <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:0.35rem; color:var(--text-main);">
+                        Next Class: How to Handle Git with AI Agents!
+                    </h3>
+                    <p style="color:var(--text-secondary); font-size:0.925rem; max-width:520px; margin:0 auto 1.25rem;">
+                        Great work today! In our next class, you'll learn how to commit, branch, and push your code to GitHub with simple plain-English AI prompts. No scary terminal commands!
+                    </p>
+                    <button class="btn-jump-test" style="padding:0.6rem 1.4rem; font-size:0.9rem;" onclick="showNextClassModal()">
+                        <span>Preview Next Class Syllabus</span> ➔
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        // -------------------------------------------------------------
+        // AUDIO SYNTHESIZER (Web Audio API - Instant, lightweight sound)
+        // -------------------------------------------------------------
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playUiSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+
+                if (type === 'click') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(320, now + 0.05);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.12, now + idx * 0.07);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.22);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.07);
+                        osc.stop(now + idx * 0.07 + 0.22);
+                    });
+                } else if (type === 'magic') {
+                    [659, 880, 1174, 1318, 1760].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.1, now + idx * 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.25);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.05);
+                        osc.stop(now + idx * 0.05 + 0.25);
+                    });
+                } else if (type === 'fanfare') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.2, now + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.5);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.5);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        // Sound Toggle
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const soundIcon = document.getElementById('sound-icon');
+        soundToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+            showToast(soundEnabled ? "Sound Effects: ON 🔊" : "Sound Effects: MUTED 🔇");
+            if (soundEnabled) playUiSound('magic');
+        });
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        themeToggleBtn.addEventListener('click', () => {
+            playUiSound('click');
+            const currentTheme = document.body.getAttribute('data-theme');
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', nextTheme);
+            themeIcon.textContent = nextTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('vibe_theme', nextTheme);
+        });
+        const savedTheme = localStorage.getItem('vibe_theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // Mobile Sidebar Controls
+        const mobileToggleBtn = document.getElementById('mobile-sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+        const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+
+        function openMobileSidebar() {
+            playUiSound('click');
+            sidebar.classList.add('mobile-open');
+            sidebarBackdrop.classList.add('active');
+        }
+
+        function closeMobileSidebar() {
+            sidebar.classList.remove('mobile-open');
+            sidebarBackdrop.classList.remove('active');
+        }
+
+        mobileToggleBtn.addEventListener('click', openMobileSidebar);
+        sidebarBackdrop.addEventListener('click', closeMobileSidebar);
+        sidebarCloseBtn.addEventListener('click', closeMobileSidebar);
+
+        // Next Class Modal Controls
+        function showNextClassModal() {
+            playUiSound('magic');
+            closeMobileSidebar();
+            document.getElementById('next-class-modal').classList.add('open');
+        }
+
+        function closeNextClassModal() {
+            playUiSound('click');
+            document.getElementById('next-class-modal').classList.remove('open');
+        }
+
+        // Helper to copy any snippet text with audio and toast
+        function copySnippetText(text) {
+            playUiSound('click');
+            navigator.clipboard.writeText(text).then(() => {
+                playUiSound('magic');
+                showToast("📋 Copied to clipboard!");
+            });
+        }
+
+        let isLessonCompleted = false;
+
+        // Reading Progress Bar & Dynamic Lesson 1 Progress Calculation
+        function updateProgress() {
+            const top = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            
+            // Top Scrollbar (0% to 100%)
+            const scrollPercent = height > 0 ? Math.min(100, Math.max(0, Math.round((top / height) * 100))) : 0;
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) progressBar.style.width = scrollPercent + '%';
+
+            // Lesson 1 Sections Tracking
+            const sections = Array.from(document.querySelectorAll('.lesson-section'));
+            const tocItems = Array.from(document.querySelectorAll('.toc-item'));
+            
+            let activeIdx = 0;
+            sections.forEach((sec, idx) => {
+                const rect = sec.getBoundingClientRect();
+                // Section is active if it's within comfortable viewing range
+                if (rect.top <= window.innerHeight * 0.45) {
+                    activeIdx = idx;
+                }
+            });
+
+            // Update TOC active and passed states
+            sections.forEach((sec, idx) => {
+                const id = sec.getAttribute('id');
+                const tocItem = document.querySelector(`.toc-item a[href="#${id}"]`)?.parentElement;
+                if (tocItem) {
+                    if (idx === activeIdx) {
+                        tocItem.classList.add('active');
+                    } else {
+                        tocItem.classList.remove('active');
+                    }
+                    if (idx < activeIdx || isLessonCompleted) {
+                        tocItem.classList.add('passed');
+                    } else {
+                        tocItem.classList.remove('passed');
+                    }
+                }
+            });
+
+            // Update Lesson 1 Progress Bar in Sidebar
+            if (!isLessonCompleted) {
+                // 7 sections: ~14%, 28%, 42%, 57%, 71%, 85%, 95%
+                const stepPercent = Math.min(95, Math.max(14, Math.round(((activeIdx + 1) / sections.length) * 100)));
+                const fill = document.getElementById('progress-fill');
+                const label = document.getElementById('progress-percent');
+                if (fill) fill.style.width = stepPercent + '%';
+                if (label) label.innerText = stepPercent + '%';
+            }
+        }
+
+        window.addEventListener('scroll', updateProgress);
+        window.addEventListener('resize', updateProgress);
+        document.addEventListener('DOMContentLoaded', updateProgress);
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2400);
+        }
+
+        // Copy Prompt Helper
+        function copyPrompt(id) {
+            playUiSound('click');
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                playUiSound('magic');
+                showToast("📋 Copied prompt to clipboard!");
+            });
+        }
+
+        // -------------------------------------------------------------
+        // 5 AUTHENTIC ANTIGRAVITY MODELS & SCENARIO DISPLAY
+        // -------------------------------------------------------------
+        const modelScenarios = {
+            flash: {
+                title: "⚡ Gemini 3.8 Flash (High Priority • Default)",
+                desc: "Sub-second speed and highest throughput. Perfect when you're tweaking button hover effects, changing Tailwind color palettes, or making fast edits without waiting.",
+                example: "Example prompt: 'Make the primary CTA button have a glowing emerald border and a smooth hover scale animation.'"
+            },
+            argon: {
+                title: "🧠 Gemini 4 Argon (Medium • New)",
+                desc: "Google's cutting-edge multimodal reasoning model. Ideal for analyzing reference images & screenshots, architecting multi-step workflows, and complex reasoning.",
+                example: "Example prompt: 'Analyze this uploaded UI screenshot and rebuild the hero layout using semantic HTML and Tailwind CSS.'"
+            },
+            sonnet: {
+                title: "🎨 Claude Sonnet 5.5 (Medium • New)",
+                desc: "World-class front-end design sensibility. Best for clean UI aesthetics, refined typography, spring micro-interactions, and surgical code refactoring.",
+                example: "Example prompt: 'Refactor this hero card to have a subtle frosted glass effect, 1px gradient border, and polished responsive typography.'"
+            },
+            opus: {
+                title: "🏗️ Claude Opus 5.5 (Medium • New)",
+                desc: "Maximum depth and extended reasoning tokens. Best for architecting full multi-file codebases, complex database schemas, and hard algorithmic systems.",
+                example: "Example prompt: 'Design an end-to-end full-stack state management architecture with offline sync and optimistic UI updates.'"
+            },
+            gptoss: {
+                title: "🌐 GPT-OSS 120B (Medium • Notice ⓘ)",
+                desc: "Massive open-weight powerhouse. Best for transparent workflows, self-hosted and private developer environments, and zero vendor lock-in.",
+                example: "Example prompt: 'Generate an isolated, dependency-free utility to parse and validate client-side portfolio submission schemas.'"
+            }
+        };
+
+        function pickModelTier(tier) {
+            playUiSound('click');
+            ['flash', 'argon', 'sonnet', 'opus', 'gptoss'].forEach(t => {
+                const card = document.getElementById(`card-${t}`);
+                if (card) card.classList.remove('active');
+            });
+            const activeCard = document.getElementById(`card-${tier}`);
+            if (activeCard) activeCard.classList.add('active');
+
+            const info = modelScenarios[tier];
+            if (info) {
+                const icon = tier === 'flash' ? '⚡' : tier === 'argon' ? '🧠' : tier === 'sonnet' ? '🎨' : tier === 'opus' ? '🏗️' : '🌐';
+                document.getElementById('scenario-title').innerHTML = `<span>${icon}</span> <span>${info.title}</span>`;
+                document.getElementById('scenario-desc').innerHTML = info.desc;
+                document.getElementById('scenario-example').innerText = info.example;
+                showToast(`Selected ${tier.toUpperCase()} model!`);
+            }
+        }
+
+        // Quiz Click
+        function handleQuiz(btn, isCorrect) {
+            if (isCorrect) {
+                playUiSound('correct');
+                btn.classList.add('correct');
+                btn.innerHTML += " ✓ Exactly right!";
+                launchConfetti();
+                showToast("🎉 Correct! Gemini 3.8 Flash is ideal for rapid styling.");
+            } else {
+                playUiSound('click');
+                btn.classList.add('wrong');
+                showToast("Try the other option! 😊");
+            }
+        }
+
+        // -------------------------------------------------------------
+        // HERO SECTION PLAYGROUND LOGIC
+        // -------------------------------------------------------------
+        function setAvatarImg(url, btn) {
+            playUiSound('click');
+            document.getElementById('hero-img').src = url;
+            document.querySelectorAll('.avatar-thumb').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            showToast("Avatar image updated!");
+        }
+
+        function setCustomAvatar(url) {
+            if (url && url.trim().length > 5) {
+                playUiSound('click');
+                document.getElementById('hero-img').src = url.trim();
+                document.querySelectorAll('.avatar-thumb').forEach(b => b.classList.remove('active'));
+                showToast("Custom image applied!");
+            }
+        }
+
+        function polishHero(style) {
+            playUiSound('magic');
+            const canvas = document.getElementById('live-hero');
+            const glow = document.getElementById('hero-glow');
+            const img = document.getElementById('hero-img');
+            const title = document.getElementById('hero-name');
+            const btnPrimary = document.getElementById('btn-cta-1');
+
+            if (style === 'glow') {
+                glow.style.background = 'radial-gradient(circle, rgba(236, 72, 153, 0.5) 0%, rgba(139, 92, 246, 0.4) 40%, transparent 70%)';
+                img.style.border = '3px solid #ec4899';
+                img.style.boxShadow = '0 0 30px rgba(236, 72, 153, 0.6)';
+                btnPrimary.style.background = 'linear-gradient(135deg, #ec4899, #8b5cf6)';
+                showToast("✨ Applied Glow Aura Polish!");
+            } else if (style === 'glass') {
+                glow.style.background = 'radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 70%)';
+                img.style.border = '3px solid rgba(255, 255, 255, 0.4)';
+                img.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.5)';
+                document.getElementById('hero-badge').style.background = 'rgba(255, 255, 255, 0.2)';
+                showToast("✨ Applied Glassmorphism Polish!");
+            } else if (style === 'cyber') {
+                canvas.style.background = 'linear-gradient(135deg, #020617 0%, #050515 100%)';
+                glow.style.background = 'radial-gradient(circle, rgba(16, 185, 129, 0.5) 0%, transparent 70%)';
+                img.style.border = '3px solid #10b981';
+                img.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.6)';
+                title.style.background = 'linear-gradient(90deg, #34d399, #38bdf8)';
+                title.style.webkitBackgroundClip = 'text';
+                title.style.webkitTextFillColor = 'transparent';
+                btnPrimary.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+                showToast("✨ Applied Cyber Neon Polish!");
+            } else if (style === 'clean') {
+                canvas.style.background = '#090d16';
+                glow.style.background = 'transparent';
+                img.style.border = '2px solid #334155';
+                img.style.boxShadow = 'none';
+                img.style.borderRadius = '12px';
+                title.style.background = 'none';
+                title.style.webkitTextFillColor = '#ffffff';
+                btnPrimary.style.background = '#ffffff';
+                btnPrimary.style.color = '#000000';
+                showToast("✨ Applied Clean Minimal Polish!");
+            }
+        }
+
+        // Finish Lesson with Next Class Unlocking & Teaser
+        function finishLesson() {
+            isLessonCompleted = true;
+            playUiSound('fanfare');
+            launchConfetti();
+
+            const btn = document.getElementById('finish-btn');
+            btn.innerHTML = "<span>✓</span> <span>Lesson 1 Completed! 🚀</span>";
+            btn.style.background = "#059669";
+            
+            // Update sidebar indicators
+            document.getElementById('badge-1').innerHTML = "✓";
+            document.getElementById('badge-1').style.background = "#10b981";
+            
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = "100%";
+            progressFill.style.background = "linear-gradient(90deg, #10b981, #059669)";
+            document.getElementById('progress-percent').innerText = "100% Completed! 🎉";
+
+            // Mark all TOC passed
+            document.querySelectorAll('.toc-item').forEach(i => i.classList.add('passed'));
+
+            // Show next class card
+            document.getElementById('next-class-card').style.display = "block";
+            
+            showToast("🎉 Lesson 1 Completed! Lesson 2 scheduled for next class.");
+
+            // Open next class teaser after a short pause
+            setTimeout(() => {
+                showNextClassModal();
+            }, 1200);
+        }
+
+        // -------------------------------------------------------------
+        // CONFETTI CANVAS PARTICLES
+        // -------------------------------------------------------------
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let particles = [];
+        let animId = null;
+
+        function resizeCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function launchConfetti() {
+            particles = [];
+            const colors = ['#4f46e5', '#9333ea', '#10b981', '#f59e0b', '#ec4899', '#06b6d4'];
+            for (let i = 0; i < 75; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    r: Math.random() * 6 + 3,
+                    dx: (Math.random() - 0.5) * 14,
+                    dy: (Math.random() - 0.7) * 16,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 100
+                });
+            }
+            if (!animId) renderConfetti();
+        }
+
+        function renderConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            let active = 0;
+            particles.forEach(p => {
+                if (p.life > 0) {
+                    active++;
+                    p.x += p.dx;
+                    p.y += p.dy;
+                    p.dy += 0.35;
+                    p.life--;
+                    confettiCtx.fillStyle = p.color;
+                    confettiCtx.beginPath();
+                    confettiCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    confettiCtx.fill();
+                }
+            });
+            if (active > 0) {
+                animId = requestAnimationFrame(renderConfetti);
+            } else {
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                animId = null;
+            }
+        }
+    </script>
+</body>
+</html>
