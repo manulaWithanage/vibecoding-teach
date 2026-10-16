@@ -316,17 +316,13 @@ export default function PracticalTest() {
                             can inspect the screenshot, extract colors, typography, and spacing, and reproduce the look
                             in your project.
                         </p>
-                        <div
-                            className="code-install-row"
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => copyText(REFERENCE_PROMPT)}
-                        >
-                            <span style={{ color: '#fcd34d' }}>
+                        <button className="ref-copy-chip" onClick={() => copyText(REFERENCE_PROMPT)}>
+                            <span>
                                 💡 Click to copy: "Match the layout, spacing, and color palette of this reference
                                 screenshot..."
                             </span>
-                            <span style={{ color: '#ffffff' }}>📋</span>
-                        </div>
+                            <span>📋</span>
+                        </button>
                     </div>
                 </div>
             </div>
