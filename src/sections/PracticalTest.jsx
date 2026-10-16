@@ -76,17 +76,17 @@ const PROMPT_CHIPS = [
     },
 ];
 
-const MASTER_PROMPT = `"Act as a senior frontend developer.
+const MASTER_PROMPT = `"Act as a senior frontend developer. I'm attaching my photo — use it as the avatar in a portfolio hero section for me.
 
-I'm attaching a reference image. Study its layout, spacing, colour palette and typography first, then design my portfolio hero section to match that look — adapted for me, not copied pixel for pixel.
+Follow the PCE formula, and stop after each step so I can review:
 
-Build it as a single index.html file with Tailwind CSS via CDN, containing:
-- a rounded avatar image
-- a bold headline and a one-line bio
-- two CTA buttons with smooth hover animations
-- a soft glowing backdrop behind the avatar
+PLAN — outline the structure of the hero section first. No code yet.
 
-Make it fully responsive, collapsing to a centered single column under 640px. Show me the plan before you write the code."`;
+CONSTRAIN — a single index.html file, Tailwind CSS via CDN, my attached photo as the avatar, no other dependencies.
+
+EXECUTE — build one piece at a time: the semantic layout first, then the styling, then the hover animations.
+
+The hero should contain my photo as a rounded avatar, a bold headline, a one-line bio, two CTA buttons, and a soft glow behind the avatar. Make it fully responsive, collapsing to a centered single column under 640px."`;
 
 const REFERENCE_PROMPT =
     'Match the layout, spacing, and modern color palette of this reference screenshot, but adapt it for my developer portfolio.';
@@ -198,7 +198,7 @@ export default function PracticalTest() {
                         }}
                     >
                         <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                            📸 Drop a reference image into Antigravity, then paste this:
+                            📸 Drop your own photo into Antigravity, then paste this:
                         </span>
                         <button
                             className="btn-polish"
