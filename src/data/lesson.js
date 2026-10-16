@@ -29,7 +29,7 @@ export const MODELS = [
             { label: 'High Priority', cls: 'badge-high' },
             { label: '✓ Default', style: { background: 'rgba(16,185,129,0.15)', color: '#10b981' } },
         ],
-        bestFor: 'Instant UI styling, CSS hover effects, fixing typos, single-file scripts, and rapid iterations with zero waiting.',
+        bestFor: 'Instant UI styling, CSS tweaks, typo fixes, and rapid iteration.',
         stats: [
             ['Response', '< 0.8s'],
             ['Speed', 'Ultra Fast'],
@@ -50,7 +50,7 @@ export const MODELS = [
             { label: 'Medium', cls: 'badge-med' },
             { label: 'New', cls: 'badge-new' },
         ],
-        bestFor: 'Deep system planning, analyzing reference image screenshots, complex logic, and end-to-end full-stack architectures.',
+        bestFor: 'System planning, reading reference screenshots, and full-stack architecture.',
         stats: [
             ['Response', '2–3s'],
             ['Vision', 'Exceptional'],
@@ -71,7 +71,7 @@ export const MODELS = [
             { label: 'Medium', cls: 'badge-med' },
             { label: 'New', cls: 'badge-new' },
         ],
-        bestFor: 'Modern web aesthetics, elegant typography, glassmorphism layouts, clean Tailwind styling, and surgical refactors.',
+        bestFor: 'Modern aesthetics, typography, polished layouts, and surgical refactors.',
         stats: [
             ['Response', '2–3s'],
             ['Aesthetic', 'Top-Tier'],
@@ -92,7 +92,7 @@ export const MODELS = [
             { label: 'Medium', cls: 'badge-med' },
             { label: 'New', cls: 'badge-new' },
         ],
-        bestFor: 'Large multi-file codebases, complex database schemas, deep algorithmic debugging, and multi-package refactoring.',
+        bestFor: 'Large multi-file codebases, database schemas, and deep algorithmic debugging.',
         stats: [
             ['Response', '4–6s'],
             ['Depth', 'Maximum'],
@@ -113,7 +113,7 @@ export const MODELS = [
             { label: 'Medium', cls: 'badge-med' },
             { label: 'Notice ⓘ', cls: 'badge-notice' },
         ],
-        bestFor: 'Open-source ecosystems, local and flexible execution, private developer pipelines, and zero-lock-in utilities.',
+        bestFor: 'Open-source ecosystems, local execution, and zero-lock-in utilities.',
         stats: [
             ['Response', '1.5s'],
             ['Ecosystem', 'Open'],
